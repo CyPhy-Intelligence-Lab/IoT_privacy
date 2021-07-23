@@ -42,7 +42,8 @@ def read_csv():
 
 
 def occ_label_organize():
-    df = pd.read_csv('data/data-2021-07-02-2021-07-09-Box13.csv')
+    #df = pd.read_csv('data/data-2021-07-02-2021-07-09-Box13.csv')
+    df = pd.read_csv('/home/ambisense/IoTPrivacyDataJuly/data-2021-07-02-2021-07-09-Box13.csv')
     list = []
     for label in df['label']:
         if label == 'NN' or label == 'NF':
@@ -54,7 +55,8 @@ def occ_label_organize():
 
 
 def ident_label_organize():
-    df = pd.read_csv('data/data-2021-07-02-2021-07-09-Box13.csv')
+    #df = pd.read_csv('data/data-2021-07-02-2021-07-09-Box13.csv')
+    df = pd.read_csv('/home/ambisense/IoTPrivacyDataJuly/data-2021-07-02-2021-07-09-Box13.csv')
     list = []
     for label in df['label']:
         if label[0] == '1':
@@ -120,10 +122,10 @@ def ident_svm_classification():
     X_train = norm(X_train)
     X_test = norm(X_test)
 
-    X_train = X_train[:10000]
-    y_train = y_train[:10000]
-    X_test = X_test[:3000]
-    y_test = y_test[:3000]
+    X_train = X_train[:]
+    y_train = y_train[:]
+    X_test = X_test[:]
+    y_test = y_test[:]
     # Create a svm Classifier
     clf = svm.SVC(kernel='rbf', decision_function_shape='ovo', verbose=True)  # Kernel
 
@@ -137,6 +139,9 @@ def ident_svm_classification():
     print("Accuracy:", metrics.accuracy_score(y_test, y_pred))
     print("Precision:", metrics.precision_score(y_test, y_pred, average=None))
     print("Recall:", metrics.recall_score(y_test, y_pred, average=None))
+
+    with open('ident_svm_13box.pkl', 'wb') as f:
+        pickle.dump(clf, f)
 
 
 def two_layer_cnn(X_train, y_train, X_test, y_test, hyper_parameters):
@@ -152,4 +157,4 @@ def two_layer_cnn(X_train, y_train, X_test, y_test, hyper_parameters):
     pool2 = MaxPooling1D(pool_size=(2, 2))(conv2)
     flat = Flatten()(pool2)
 
-occ_svm_classification()
+ident_svm_classification()
